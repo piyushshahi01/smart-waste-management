@@ -1,0 +1,280 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+body,
+html {
+  font-family: 'Outfit', sans-serif;
+  color: #1f2937;
+  overflow-x: hidden !important;
+  min-height: 100vh;
+  background-color: #fdfbfb;
+  scroll-behavior: smooth;
+}
+
+/* Base fixed background layer to contain the animated orbs */
+.bg-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #fdfbfb;
+  overflow: hidden;
+}
+
+/* Vibrant Light Mode Orbs */
+.bg-animation::before,
+.bg-animation::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.8;
+}
+
+.bg-animation::before {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 107, 107, 0.4), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(72, 219, 251, 0.4), transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(255, 159, 67, 0.3), transparent 50%);
+  animation: orb1 15s infinite alternate ease-in-out;
+}
+
+.bg-animation::after {
+  background: radial-gradient(circle at 70% 30%, rgba(29, 209, 161, 0.4), transparent 40%),
+    radial-gradient(circle at 30% 70%, rgba(254, 202, 87, 0.4), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(255, 154, 162, 0.3), transparent 50%);
+  animation: orb2 18s infinite alternate ease-in-out;
+}
+
+@keyframes orb1 {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
+
+@keyframes orb2 {
+  0% {
+    transform: rotate(360deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1.2);
+  }
+}
+
+/* Hyper-modern Dark Mode (Vibrant Premium Theme) */
+.dark body {
+  color: #ffffff;
+  background-color: #0f0a1c;
+  /* Deep, rich violet base */
+  background-image:
+    radial-gradient(ellipse at top right, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+    /* Violet glow */
+    radial-gradient(ellipse at bottom left, rgba(217, 70, 239, 0.1) 0%, transparent 50%);
+  /* Fuchsia glow */
+}
+
+.dark .bg-animation {
+  background-color: transparent;
+}
+
+.dark .bg-animation::before {
+  background: radial-gradient(circle at 20% 40%, rgba(217, 70, 239, 0.25), transparent 50%),
+    /* Vibrant Fuchsia */
+    radial-gradient(circle at 80% 60%, rgba(249, 115, 22, 0.2), transparent 45%),
+    /* Bright Orange */
+    radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.15), transparent 50%);
+  /* Violet depth */
+}
+
+.dark .bg-animation::after {
+  background: radial-gradient(circle at 70% 20%, rgba(168, 85, 247, 0.2), transparent 50%),
+    /* Purple */
+    radial-gradient(circle at 30% 80%, rgba(244, 63, 94, 0.2), transparent 45%),
+    /* Rose/Red */
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.15), transparent 50%);
+  /* Subtle Orange */
+}
+
+/* --- Dynamic Eco-Level Backgrounds --- */
+/* Level 1: Default Violet/Fuchsia (0-99 pts) */
+.dark .bg-level-1::before {
+  /* Inherits from default .bg-animation */
+}
+
+/* Level 2: Sapphire & Emerald (100-499 pts) */
+.dark .bg-level-2::before {
+  background: radial-gradient(circle at 20% 40%, rgba(16, 185, 129, 0.2), transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(59, 130, 246, 0.2), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(14, 165, 233, 0.15), transparent 50%);
+}
+
+.dark .bg-level-2::after {
+  background: radial-gradient(circle at 70% 20%, rgba(59, 130, 246, 0.2), transparent 50%),
+    radial-gradient(circle at 30% 80%, rgba(16, 185, 129, 0.2), transparent 45%),
+    radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.15), transparent 50%);
+}
+
+/* Level 3: Golden Supernova (500-999 pts) */
+.dark .bg-level-3::before {
+  background: radial-gradient(circle at 20% 40%, rgba(234, 179, 8, 0.3), transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(249, 115, 22, 0.25), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(250, 204, 21, 0.15), transparent 50%);
+}
+
+.dark .bg-level-3::after {
+  background: radial-gradient(circle at 70% 20%, rgba(245, 158, 11, 0.25), transparent 50%),
+    radial-gradient(circle at 30% 80%, rgba(249, 115, 22, 0.3), transparent 45%),
+    radial-gradient(circle at 10% 20%, rgba(253, 224, 71, 0.15), transparent 50%);
+}
+
+/* Level 4+: Quantum Ascendant (1000+ pts) */
+.dark .bg-level-4::before {
+  background: radial-gradient(circle at 20% 40%, rgba(168, 85, 247, 0.3), transparent 50%),
+    radial-gradient(circle at 80% 60%, rgba(236, 72, 153, 0.3), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(56, 189, 248, 0.25), transparent 50%);
+}
+
+.dark .bg-level-4::after {
+  background: radial-gradient(circle at 70% 20%, rgba(56, 189, 248, 0.3), transparent 50%),
+    radial-gradient(circle at 30% 80%, rgba(168, 85, 247, 0.3), transparent 45%),
+    radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.25), transparent 50%);
+}
+
+/* Glassmorphism Utilities - Make them pop more against the vibrant background */
+.glass-panel {
+  @apply bg-white/70 dark:bg-[#1a132c]/60 backdrop-blur-2xl border border-white/40 dark:border-white/10;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.dark .glass-panel {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
+}
+
+/* Mouse Proximity Glow on Cards */
+.glass-card {
+  @apply bg-white/50 dark:bg-[#1a132c]/50 backdrop-blur-xl border border-white/60 dark:border-white/10 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 ease-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Framer motion hover scale handles the 1.02, CSS handles the active bounce */
+.glass-card:active {
+  transform: scale(0.98);
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+      rgba(255, 255, 255, 0.15),
+      transparent 40%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dark .glass-card::before {
+  background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
+      rgba(249, 115, 22, 0.1),
+      /* Orange Mouse Glow */
+      transparent 40%);
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+.glass-card:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 20px rgba(249, 115, 22, 0.15);
+}
+
+/* IoT Animations */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+
+  25% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px 0 rgba(239, 68, 68, 0);
+  }
+
+  50% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+
+  75% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px 0 rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+}
+
+.liquid-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%23ffffff" fill-opacity="0.2" d="M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,160C672,160,768,192,864,208C960,224,1056,224,1152,197.3C1248,171,1344,117,1392,90.7L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+  background-size: 50% 100%;
+  animation: wave 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(0) scaleY(1);
+  }
+
+  50% {
+    transform: translateX(-25%) scaleY(1.1);
+  }
+
+  100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+
+/* Auth Page Animations */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

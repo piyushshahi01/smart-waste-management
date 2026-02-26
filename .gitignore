@@ -1,0 +1,22 @@
+# env files
+.env
+backend/.env
+frontend/.env
+
+# Firebase secrets
+firebase-key.json
+backend/config/firebase-key.json
+
+# dependencies
+node_modules/
+
+# build files
+dist/
+build/
+
+# logs
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
