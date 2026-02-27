@@ -1,7 +1,6 @@
-const CACHE_NAME = 'wastesync-cache-v2';
+const CACHE_NAME = 'wastesync-cache-v3';
 const urlsToCache = [
     '/',
-    '/index.html',
     '/manifest.json',
     '/vite.svg'
 ];
@@ -30,16 +29,22 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+    // For HTML requests, try the network first to avoid stale index.html
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                if (response) {
-                    return response; // Return from cache
-                }
-                return fetch(event.request); // Fetch from network
+                return response || fetch(event.request);
             })
     );
 });
+
 
 // Listen for incoming Web Push Notifications
 self.addEventListener('push', function (event) {
