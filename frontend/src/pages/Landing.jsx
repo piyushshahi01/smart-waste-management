@@ -207,13 +207,24 @@ export default function Landing() {
                     </p>
 
                     <div className="flex justify-center gap-4 pointer-events-auto">
-                        <button className="px-6 py-2.5 bg-black/40 hover:bg-black/80 border border-white/10 text-white rounded-full transition-all hover:border-orange-500/50 text-sm font-medium hover:shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                        <a
+                            href="https://github.com/piyushshahi01"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-2.5 bg-black/40 hover:bg-black/80 border border-white/10 text-white rounded-full transition-all hover:border-orange-500/50 text-sm font-medium hover:shadow-[0_0_15px_rgba(249,115,22,0.2)] block"
+                        >
                             GitHub
-                        </button>
-                        <button className="px-6 py-2.5 bg-black/40 hover:bg-black/80 border border-white/10 text-white rounded-full transition-all hover:border-red-500/50 text-sm font-medium hover:shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/in/piyush-singh-shahi-a70627379"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-2.5 bg-black/40 hover:bg-black/80 border border-white/10 text-white rounded-full transition-all hover:border-red-500/50 text-sm font-medium hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] block"
+                        >
                             LinkedIn
-                        </button>
+                        </a>
                     </div>
+
                 </motion.div>
             </section>
 

@@ -19,9 +19,9 @@ export default function Footer() {
                     <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-[10px] font-black text-black">P</div>
                     Profile
                 </a>
-                <a href="#" className="hover:text-orange-400 cursor-pointer transition-colors duration-300">Instagram</a>
-                <a href="#" className="hover:text-orange-400 cursor-pointer transition-colors duration-300">Twitter</a>
-                <a href="#" className="hover:text-orange-400 cursor-pointer transition-colors duration-300">LinkedIn</a>
+                <a href="https://github.com/piyushshahi01" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 cursor-pointer transition-colors duration-300">GitHub</a>
+                <a href="https://www.linkedin.com/in/piyush-singh-shahi-a70627379" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 cursor-pointer transition-colors duration-300">LinkedIn</a>
+
             </div>
         </footer>
     );
