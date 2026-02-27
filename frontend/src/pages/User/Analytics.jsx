@@ -59,7 +59,6 @@ function EcoScoreGauge({ score }) {
                     gsap.to(circle, {
                         strokeDashoffset: offset,
                         duration: 2.5,
-                        ease: "custom", // Wait we need to register custom ease. Actually let's just use expo.out which is similar to the bezier
                         ease: "expo.out",
                         delay: 0.2
                     });
