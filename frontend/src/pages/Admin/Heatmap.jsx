@@ -70,9 +70,9 @@ export default function Heatmap() {
                                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                             />
                             {bins.map((bin) => {
-                                // Default coordinates fallback if DB lacks them
-                                const lat = bin.coordinates?.lat || (mapCenter[0] + (Math.random() - 0.5) * 0.1);
-                                const lng = bin.coordinates?.lng || (mapCenter[1] + (Math.random() - 0.5) * 0.1);
+                                // Prefer DB lat/lng
+                                const lat = bin.lat || (mapCenter[0] + (Math.random() - 0.5) * 0.1);
+                                const lng = bin.lng || (mapCenter[1] + (Math.random() - 0.5) * 0.1);
 
                                 let color = "#22c55e"; // Green
                                 let radius = 15;

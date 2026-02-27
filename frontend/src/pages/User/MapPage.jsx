@@ -62,19 +62,26 @@ export default function MapPage() {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    // Only use if within India bounds
-                    if (latitude > 8 && latitude < 38 && longitude > 68 && longitude < 98) {
+                    // Check if user is within a reasonable range of Noida/Delhi (approx 100km)
+                    const distToNoida = Math.sqrt(Math.pow(latitude - DEFAULT_CITY_CENTER[0], 2) + Math.pow(longitude - DEFAULT_CITY_CENTER[1], 2));
+
+                    if (distToNoida < 1.0) { // Approx 111km
                         setUserLocation([latitude, longitude]);
+                    } else {
+                        console.log("User outside operational area, centering on Noida HQ.");
+                        setUserLocation(DEFAULT_CITY_CENTER);
                     }
                     setLocationLoaded(true);
                 },
                 (error) => {
                     console.error("Error obtaining location", error);
+                    setUserLocation(DEFAULT_CITY_CENTER);
                     setLocationLoaded(true);
                 },
                 { enableHighAccuracy: true, timeout: 5000 }
             );
         } else {
+            setUserLocation(DEFAULT_CITY_CENTER);
             setLocationLoaded(true);
         }
 
