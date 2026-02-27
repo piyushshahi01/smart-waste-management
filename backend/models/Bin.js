@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const binSchema = new mongoose.Schema({
     location: String,
+    lat: Number,
+    lng: Number,
     fillLevel: Number,
     gasLevel: Number,
     temperature: Number,

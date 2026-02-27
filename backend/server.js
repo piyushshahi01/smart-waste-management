@@ -38,6 +38,7 @@ app.use("/api/bins", require("./routes/binRoutes"));
 app.use("/api/pickups", require("./routes/pickupRoutes"));
 app.use("/api/alerts", require("./routes/alertRoutes"));
 app.use("/api/iot", require("./routes/iotRoutes"));
+app.use("/api/rewards", require("./routes/rewardRoutes"));
 
 // Start IoT Real-time monitoring service
 require("./services/iotService").monitorBins();

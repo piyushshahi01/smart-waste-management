@@ -26,22 +26,29 @@ ChartJS.register(
 );
 
 const Graph = ({ dataList }) => {
+    const [render, setRender] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setRender(true), 500);
+        return () => clearTimeout(timer);
+    }, []);
+
     const data = {
         labels: dataList.map((_, i) => {
             const date = new Date();
-            date.setSeconds(date.getSeconds() - (dataList.length - 1 - i) * 5); // Approximate time
+            date.setSeconds(date.getSeconds() - (dataList.length - 1 - i) * 5);
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         }),
         datasets: [
             {
                 label: "Fill Level %",
                 data: dataList.map(d => d.fill || 0),
-                borderColor: "#f97316", // orange-500
+                borderColor: "#f97316",
                 backgroundColor: "rgba(249, 115, 22, 0.2)",
                 borderWidth: 2,
                 tension: 0.4,
                 fill: true,
-                pointBackgroundColor: "#ef4444", // red-500
+                pointBackgroundColor: "#ef4444",
             },
         ],
     };
@@ -49,6 +56,7 @@ const Graph = ({ dataList }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
+        animation: { duration: 0 }, // Disable animation to prevent layout jumps
         plugins: {
             legend: {
                 labels: { color: "rgba(255, 255, 255, 0.7)" }
@@ -68,7 +76,11 @@ const Graph = ({ dataList }) => {
         }
     };
 
-    return <div className="h-64 w-full"><Line data={data} options={options} /></div>;
+    return (
+        <div className="h-64 w-full relative min-h-[256px]">
+            {render ? <Line data={data} options={options} /> : <div className="h-full w-full bg-gray-800/20 animate-pulse rounded-xl" />}
+        </div>
+    );
 };
 
 export default function SmartBins() {

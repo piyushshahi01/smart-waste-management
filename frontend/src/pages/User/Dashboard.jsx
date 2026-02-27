@@ -67,7 +67,8 @@ export default function UserDashboard() {
             fetchWasteData(); // Refresh history
 
         } catch (err) {
-            setMessage({ text: 'Failed to log waste. Try again.', type: 'error' });
+            const errorMsg = err.response?.data?.message || err.response?.data?.msg || 'Failed to log waste. Try again.';
+            setMessage({ text: errorMsg, type: 'error' });
         } finally {
             setSubmitting(false);
             setTimeout(() => setMessage({ text: '', type: '' }), 3000);

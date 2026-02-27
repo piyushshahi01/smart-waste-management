@@ -6,14 +6,10 @@ import MagneticButton from '../../components/MagneticButton';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MOCK_REWARDS = [
-    { id: 1, title: 'Free Coffee', provider: 'Starbucks', points: 150, icon: Coffee, color: 'text-amber-600', bg: 'bg-amber-100', desc: 'Get a free tall coffee at any participating location.' },
-    { id: 2, title: 'Metro Pass', provider: 'City Transit', points: 300, icon: Train, color: 'text-blue-600', bg: 'bg-blue-100', desc: 'A free day pass for all city buses and subway lines.' },
-    { id: 3, title: 'Plant a Tree', provider: 'OneTreePlanted', points: 500, icon: TreePine, color: 'text-green-600', bg: 'bg-green-100', desc: 'We will plant a tree in your name in a deforested area.' },
-    { id: 4, title: '$10 Eco-Store Voucher', provider: 'WasteSync Market', points: 1000, icon: ShoppingBag, color: 'text-purple-600', bg: 'bg-purple-100', desc: 'A discount voucher for sustainable products in our store.' }
-];
+const ICON_MAP = { Gift, Coffee, Train, TreePine, ShoppingBag };
 
 export default function Rewards() {
+    const [rewards, setRewards] = useState([]);
     const [userPoints, setUserPoints] = useState(0);
     const [loading, setLoading] = useState(true);
     const [redeeming, setRedeeming] = useState(null);
@@ -21,36 +17,45 @@ export default function Rewards() {
 
     const token = localStorage.getItem("token");
 
-    const fetchPoints = async () => {
+    const fetchData = async () => {
         try {
-            const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
-                headers: { Authorization: token }
-            });
-            setUserPoints(res.data.ecoPoints || 0);
+            const [pointsRes, rewardsRes] = await Promise.all([
+                axios.get(`${API_BASE_URL}/api/auth/me`, { headers: { Authorization: token } }),
+                axios.get(`${API_BASE_URL}/api/rewards`)
+            ]);
+            setUserPoints(pointsRes.data.ecoPoints || 0);
+            setRewards(rewardsRes.data);
         } catch (err) {
-            console.error("Failed to fetch points", err);
+            console.error("Failed to fetch data", err);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        if (token) fetchPoints();
+        if (token) fetchData();
     }, [token]);
 
-    const handleRedeem = (reward) => {
+    const handleRedeem = async (reward) => {
         if (userPoints < reward.points) return;
 
-        setRedeeming(reward.id);
+        setRedeeming(reward._id);
 
-        // Mock API call delay
-        setTimeout(() => {
-            setUserPoints(prev => prev - reward.points);
-            setRedeeming(null);
+        try {
+            const res = await axios.post(`${API_BASE_URL}/api/rewards/redeem`,
+                { rewardId: reward._id },
+                { headers: { Authorization: token } }
+            );
+
+            setUserPoints(res.data.newBalance);
             setShowSuccess(reward.title);
-
             setTimeout(() => setShowSuccess(false), 3000);
-        }, 1500);
+        } catch (err) {
+            console.error("Redemption failed", err);
+            alert(err.response?.data?.message || "Failed to redeem reward");
+        } finally {
+            setRedeeming(null);
+        }
     };
 
     if (loading) {
@@ -105,14 +110,14 @@ export default function Rewards() {
 
             {/* Catalog Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {MOCK_REWARDS.map((reward, index) => {
-                    const Icon = reward.icon;
+                {rewards.map((reward, index) => {
+                    const Icon = ICON_MAP[reward.icon] || Gift;
                     const canAfford = userPoints >= reward.points;
-                    const isRedeeming = redeeming === reward.id;
+                    const isRedeeming = redeeming === reward._id;
 
                     return (
                         <motion.div
-                            key={reward.id}
+                            key={reward._id}
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
