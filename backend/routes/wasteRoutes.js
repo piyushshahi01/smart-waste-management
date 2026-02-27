@@ -15,21 +15,39 @@ const POINT_MULTIPLIERS = {
 };
 
 // add waste
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     try {
-        console.log("BODY:", req.body);
+        const { type, quantity } = req.body;
 
-        const { distance, temp, gas } = req.body;
-
-        if (!distance || !temp || !gas) {
-            return res.status(400).json({ message: "Missing data" });
+        if (!type || !quantity) {
+            return res.status(400).json({ message: "Missing type or quantity" });
         }
 
-        res.json({ success: true, data: req.body });
+        const userId = req.user.id;
+        const multiplier = POINT_MULTIPLIERS[type.toLowerCase()] || 0;
+        const points = Math.round(quantity * multiplier);
+
+        const newWaste = new Waste({
+            userId,
+            type,
+            quantity,
+            points,
+            date: new Date()
+        });
+
+        await newWaste.save();
+
+        // Update User Eco Points
+        await User.findByIdAndUpdate(userId, {
+            $inc: { ecoPoints: points },
+            $set: { lastLogDate: new Date() }
+        });
+
+        res.status(201).json(newWaste);
 
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server error" });
+        console.error("Waste Submit Error:", err);
+        res.status(500).json({ message: "Server error during waste submission" });
     }
 });
 
