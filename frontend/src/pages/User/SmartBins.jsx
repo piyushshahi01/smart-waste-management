@@ -108,16 +108,22 @@ export default function SmartBins() {
 
             let currentData = null;
 
-            // Handle the new structure if they nested it under "bin"
-            if (value.bin) {
-                currentData = value.bin;
+            // Robust data selection: find the first object that looks like a bin
+            // This covers "bin", "bin1", or sanitized locations like "Sector_62__Noida"
+            for (const key in value) {
+                const item = value[key];
+                if (item && typeof item === 'object' && (item.fill !== undefined || item.distance !== undefined || item.location)) {
+                    currentData = item;
+                    break;
+                }
             }
-            // Handle the old structure if it's "bin1"
-            else if (value.bin1) {
-                currentData = value.bin1;
-            } else {
+
+            // Fallback for flat structure OR didn't find in keys
+            if (!currentData && (value.fill !== undefined || value.distance !== undefined)) {
                 currentData = value;
             }
+
+            if (!currentData) return;
 
             // Calculate fill locally if not provided by hardware (fallback)
             if (currentData.fill === undefined && currentData.distance !== undefined) {
@@ -125,7 +131,10 @@ export default function SmartBins() {
             }
 
             setData(currentData);
-            setHistory(prev => [...prev.slice(-19), currentData]); // keep last 20 values
+            setHistory(prev => {
+                const newHistory = [...prev, currentData];
+                return newHistory.slice(-20); // keep last 20
+            });
         });
 
         return () => unsubscribe();
