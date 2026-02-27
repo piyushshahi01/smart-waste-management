@@ -6,6 +6,8 @@ import {
 } from 'recharts';
 import axios from 'axios';
 import { Trash2, TrendingUp, AlertTriangle } from 'lucide-react';
+import { db, ref, onValue } from '../../firebase';
+
 
 export default function AdminDashboard() {
     const [weeklyData, setWeeklyData] = useState([]);
@@ -16,10 +18,9 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [weeklyRes, monthlyRes, binsRes] = await Promise.all([
+                const [weeklyRes, monthlyRes] = await Promise.all([
                     axios.get(`${API_BASE_URL}/api/analytics/weekly`),
-                    axios.get(`${API_BASE_URL}/api/analytics/monthly`),
-                    axios.get(`${API_BASE_URL}/api/bins`)
+                    axios.get(`${API_BASE_URL}/api/analytics/monthly`)
                 ]);
 
                 // Map data to readable labels
@@ -36,22 +37,54 @@ export default function AdminDashboard() {
                     waste: d.total
                 }));
                 setMonthlyData(mappedMonthly);
-                setBins(binsRes.data);
 
             } catch (error) {
-                console.error("Failed to fetch analytics or bins:", error);
+                console.error("Failed to fetch analytics:", error);
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
 
-        // Also setup interval for bins specifically if we want live updates
-        const interval = setInterval(() => {
-            axios.get(`${API_BASE_URL}/api/bins`).then(res => setBins(res.data)).catch(console.error);
-        }, 5000);
-        return () => clearInterval(interval);
+        // Real-time Firebase listener for bins
+        const binsRef = ref(db, "/");
+        const unsubscribe = onValue(binsRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            const binsList = [];
+            // Handle different possible structures (root with bin1, bin2 OR /bin/bin1, bin2)
+            const source = data.bin || data;
+
+            for (const key in source) {
+                if (key.startsWith('bin') || source[key].location) {
+                    const binData = source[key];
+                    // Calculate fill level if not provided
+                    const fillLevel = binData.fill !== undefined
+                        ? binData.fill
+                        : (binData.distance !== undefined
+                            ? Math.max(0, Math.min(100, ((13.0 - binData.distance) / 13.0) * 100))
+                            : 0);
+
+                    let status = binData.status || "Normal";
+                    if (fillLevel > 80) status = "Full";
+                    if (binData.gas > 500) status = "Gas Alert";
+                    if (binData.temp > 40) status = "Fire Risk";
+
+                    binsList.push({
+                        ...binData,
+                        id: key,
+                        fillLevel,
+                        status
+                    });
+                }
+            }
+            setBins(binsList);
+        });
+
+        return () => unsubscribe();
     }, []);
+
 
     const totalBins = bins.length;
     const fullBins = bins.filter(b => b.fillLevel > 80).length;
